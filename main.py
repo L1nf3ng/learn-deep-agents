@@ -1,14 +1,17 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from deepagents import create_deep_agent
 from deepagents.backends import FilesystemBackend, LocalShellBackend
 from deepagents.backends.local_shell import LocalShellBackend
 from langchain.chat_models import init_chat_model
-from dotenv import load_dotenv
+from tools.network import crawl_page
 
-load_dotenv()
 
 model = init_chat_model("anthropic:MiniMax-M2.5")
 agent = create_deep_agent(
     model=model,
+    tools=[crawl_page],
     backend=FilesystemBackend(root_dir=".", virtual_mode=True)
 )
 

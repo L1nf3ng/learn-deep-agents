@@ -21,16 +21,23 @@ def internet_search(
     )
 
 
-def crawl_page(url: str, max_depth: int = 1, include_raw_content: bool = True):
+def crawl_page(
+    url: str,
+    extract_depth: str = "basic",
+    format: str = "text",
+    include_images: bool = False,
+):
     """Crawl a specific URL and extract its content.
 
     Args:
         url: The target URL to crawl.
-        max_depth: Maximum crawl depth (1 = only the given URL).
-        include_raw_content: Whether to include raw HTML content.
+        extract_depth: Extraction depth, "basic" or "advanced".
+        format: Output format, "text" or "html".
+        include_images: Whether to include images in the result.
     """
-    return tavily_client.crawl(
-        url,
-        max_depth=max_depth,
-        include_raw_content=include_raw_content,
+    return tavily_client.extract(
+        urls=[url],
+        extract_depth=extract_depth,
+        format=format,
+        include_images=include_images,
     )
