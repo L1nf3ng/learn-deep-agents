@@ -25,7 +25,6 @@ def text_to_speech(
     aigc_watermark: bool = False,
     output_type: str = "hex",
     latex_read: bool = False,
-    output_dir: str = None,
 ) -> str:
     """Convert text to speech using MiniMax T2A API and save audio to local file.
 
@@ -49,7 +48,6 @@ def text_to_speech(
         aigc_watermark: Add audio watermark at end (default: False).
         output_type: "hex" or "url", default "hex".
         latex_read: Enable LaTeX reading, only for Chinese (default: False).
-        output_dir: Directory to save audio. Defaults to project results/ dir.
 
     Returns:
         Path to the saved audio file.
@@ -107,11 +105,7 @@ def text_to_speech(
         raise ValueError(f"No audio in response: {result}")
     audio_bytes = bytes.fromhex(audio_hex)
 
-    if output_dir is None:
-        output_dir = Path(__file__).parent.parent / "results"
-    else:
-        output_dir = Path(output_dir)
-    output_dir.mkdir(parents=True, exist_ok=True)
+    output_dir = Path(__file__).parent.parent / "results"
 
     safe_name = (
         text[:30]
