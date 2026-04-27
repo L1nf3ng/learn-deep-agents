@@ -9,6 +9,16 @@ from langchain.chat_models import init_chat_model
 from tools.network import crawl_page
 from tools.audio import text_to_speech
 
+from langfuse import get_client
+from langfuse.langchain import CallbackHandler
+
+langfuse = get_client()
+
+if langfuse.auth_check():
+    print("Langfuse client is authenticated and ready!")
+else:
+    print("Authentication failed. Please check your credentials and host.")
+langfuse_handler = CallbackHandler()
 
 
 WORK_DIR = Path(__file__).parent
@@ -37,7 +47,10 @@ agent = create_deep_agent(
 
 
 if __name__ == "__main__":
-    result = agent.invoke({"messages": [{"role": "user", "content": "访问这个页面https://docs.langchain.com/oss/python/deepagents/subagents并总结"}]})
+    result = agent.invoke(
+        {"messages": [{"role": "user", "content": "访问这个页面https://docs.langchain.com/oss/python/deepagents/subagents并总结"}]},
+        config={"callbacks":[langfuse_handler]}
+    )
     
     # Print the agent's response
     for message in result["messages"][-1].content:
